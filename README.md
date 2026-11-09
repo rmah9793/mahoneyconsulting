@@ -1,30 +1,29 @@
-# Mahoney Consulting
+# Welcome to your Lovable project
 
-Landing page for Mahoney Consulting, built from the marketing kit in Google Drive (`Consulting / Marketing`).
+This project was built with [Lovable](https://lovable.dev).
 
-## Run locally
+## Build with Lovable
 
-```bash
-npm install
+Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
+- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+```sh
+git clone <this-repository-url>
+cd <repository-name>
+npm i
 npm run dev
 ```
 
-Then open the local URL Vite prints.
+## Built with
 
-## Brand sources used
-
-- Concept #16 copy, layout and colour tokens from `LOVABLE_MASTER_PROMPT.md` and `MAHONEY_BRAND_GUIDELINES.md`
-- Connected M mark (latest brand assets) for the logo
-- Concept #16 favicons from the Lovable kit
-- Landing-page visual reference for hierarchy and mood
-- Unsplash photography for the hero and approach sections (replace before a public launch if you want owned imagery)
-
-## Before publishing
-
-Edit `src/site.ts`:
-
-- Confirm `email` (currently `ryan@mahoney.consulting`)
-- Add `bookingUrl` when a calendar is ready
-- Add LinkedIn, privacy and terms URLs
-- Replace photography if needed
-- Have a designer refine the Connected M outline if it will be used as a trademark
+- TanStack Start
+- TypeScript
+- React
+- Tailwind CSS
