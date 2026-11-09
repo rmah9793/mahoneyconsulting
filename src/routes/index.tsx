@@ -1,12 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ArrowRight, ChevronRight, Menu, Plus, X } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import { ArrowUpRight, Play } from "lucide-react";
 import heroImg from "@/assets/hero-mountains.jpg";
 import archImg from "@/assets/approach-architecture.jpg";
 import chessImg from "@/assets/tile-chess.jpg";
 import opsImg from "@/assets/tile-operations.jpg";
 import boardImg from "@/assets/tile-boardroom.jpg";
-import { Logo, Monogram } from "@/components/Logo";
+import { Logo } from "@/components/Logo";
+import { FilmOverlay } from "@/components/FilmOverlay";
+import { QuestionPuzzle } from "@/components/QuestionPuzzle";
+import { useHomeMotion } from "@/components/useHomeMotion.tsx";
 import { site, contactHref } from "@/config/site";
 
 export const Route = createFileRoute("/")({
@@ -31,10 +34,10 @@ const nav = [
 ];
 
 const services = [
-  { img: chessImg, w: 1024, h: 1024, tag: "Fractional CEO", title: "Direction, decisions and a team pulling the same way", body: "Senior leadership to set strategy and lead the business into its next stage — without a full-time executive hire." },
-  { img: opsImg, w: 1280, h: 1024, tag: "Fractional COO", title: "Operations that keep up with the ambition", body: "Process, structure and cadence for businesses that have outgrown how they run." },
-  { img: boardImg, w: 1024, h: 1280, tag: "Strategy & Execution", title: "A plan you can actually run on Monday", body: "Fewer priorities, clear owners, a weekly rhythm — and someone accountable for keeping it moving." },
-  { img: archImg, w: 1280, h: 1024, tag: "Growth & Value", title: "Building a business that's worth more", body: "Focus on the levers that matter for revenue, margin and long-term enterprise value." },
+  { img: chessImg, w: 1024, h: 1024, alt: "Chess pieces on a board", tag: "Fractional CEO", title: "Direction, decisions and a team pulling the same way", body: "Senior leadership to set strategy and lead the business into its next stage — without a full-time executive hire." },
+  { img: opsImg, w: 1280, h: 1024, alt: "An operations floor in use", tag: "Fractional COO", title: "Operations that keep up with the ambition", body: "Process, structure and cadence for businesses that have outgrown how they run." },
+  { img: boardImg, w: 1024, h: 1280, alt: "A leadership meeting in a boardroom", tag: "Strategy & Execution", title: "A plan you can actually run on Monday", body: "Fewer priorities, clear owners, a weekly rhythm — and someone accountable for keeping it moving." },
+  { img: archImg, w: 1280, h: 1024, alt: "A modern glass office building", tag: "Growth & Value", title: "Building a business that's worth more", body: "Focus on the levers that matter for revenue, margin and long-term enterprise value." },
 ];
 
 const questions = [
@@ -45,147 +48,148 @@ const questions = [
   ["We need senior leadership — but not a full-time hire yet.", "Fractional CEO / COO"],
 ];
 
-const steps = [
-  { n: "01", title: "Understand", body: "Conversations with leadership and the team, a hard look at the numbers, and an honest read of where things stand." },
-  { n: "02", title: "Lead", body: "We take on agreed responsibilities inside the business and work alongside your people, week in, week out." },
-  { n: "03", title: "Deliver", body: "Routines, ownership and capability that hold up after we step back. Success is not needing us." },
+const beliefs = [
+  "We don't hand over a deck and leave.",
+  "We sit in the leadership meetings.",
+  "We take on real responsibilities.",
+  "We stay close enough to the work to see whether it's actually changing.",
+  "Success is not needing us.",
 ];
 
-function useReveal() {
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      (es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add("is-visible"), io.unobserve(e.target))),
-      { threshold: 0.1 },
-    );
-    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-}
+const steps = [
+  { n: 1, title: "Understand", body: "Conversations with leadership and the team, a hard look at the numbers, and an honest read of where things stand." },
+  { n: 2, title: "Lead", body: "We take on agreed responsibilities inside the business and work alongside your people, week in, week out." },
+  { n: 3, title: "Deliver", body: "Routines, ownership and capability that hold up after we step back. Success is not needing us." },
+];
 
-function CircleArrow({ href, label, tone = "dark" }: { href: string; label: string; tone?: "dark" | "blue" }) {
-  return (
-    <a href={href} aria-label={label} className={`circle-arrow ${tone === "blue" ? "circle-arrow-blue" : ""}`}>
-      <ArrowRight className="h-7 w-7" strokeWidth={1.75} />
-    </a>
-  );
-}
+const principles = [
+  ["Embedded", "Part of your leadership team, inside the business day to day."],
+  ["Practical", "Decisions, owners and dates. Nothing that only works on a slide."],
+  ["Accountable", "Agreed measures of progress, reviewed openly and often."],
+];
 
 function Header() {
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    const k = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", k);
-    return () => window.removeEventListener("keydown", k);
-  }, []);
   return (
-    <header className="sticky top-0 z-50 border-b bg-card text-navy">
-      <div className="mx-auto flex h-[4.75rem] max-w-[100rem] items-center gap-6 px-5 sm:px-10">
-        <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls="menu" aria-label={open ? "Close menu" : "Open menu"} className="grid h-10 w-10 shrink-0 place-items-center">
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-        <a href="#top" aria-label="Mahoney.consulting — home" className="min-w-0"><Logo tone="light" /></a>
-        <nav aria-label="Primary" className="ml-8 hidden items-center gap-8 xl:flex">
-          {nav.map((n) => <a key={n.href} href={n.href} className="link-line text-[0.92rem] text-navy/80 hover:text-navy">{n.label}</a>)}
-        </nav>
-        <a href={contactHref()} className="link-line ml-auto hidden text-[0.92rem] font-medium text-primary sm:inline">Schedule a conversation</a>
-      </div>
-      {open && (
-        <nav id="menu" aria-label="Menu" className="absolute inset-x-0 top-full border-b bg-card shadow-card">
-          <ul className="mx-auto grid max-w-[100rem] gap-x-10 px-5 py-8 sm:grid-cols-2 sm:px-10 lg:grid-cols-4">
+    <>
+      <header id="siteHeader" data-tone="dark" data-menu="closed" className="fixed inset-x-0 top-0 z-50">
+        <div className="mx-auto flex max-w-[96rem] items-center gap-2 px-5 py-4 sm:px-8 lg:py-5">
+          <a href="#top" aria-label="Mahoney.consulting — home" className="relative block shrink-0">
+            <span id="headerLogo" className="relative block">
+              <span className="logo-on-dark block"><Logo tone="dark" /></span>
+              <span className="logo-on-light block" aria-hidden><Logo tone="light" /></span>
+            </span>
+          </a>
+          <nav id="headerTabs" aria-label="Primary" className="ml-auto hidden items-center gap-1 lg:flex">
+            {nav.map((n) => (
+              <a key={n.href} href={n.href} className="rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-current/10">{n.label}</a>
+            ))}
+          </nav>
+          <a href={contactHref()} className="header-cta pill pill-glass ml-3 hidden lg:inline-flex">Schedule a conversation</a>
+          <button id="menuButton" type="button" aria-expanded="false" aria-controls="menuOverlay" aria-label="Open menu" className="relative ml-auto grid h-11 w-11 place-items-center rounded-full lg:hidden">
+            <span className="menu-line menu-line-1" />
+            <span className="menu-line menu-line-2" />
+          </button>
+        </div>
+      </header>
+
+      <div id="menuOverlay" role="dialog" aria-label="Menu" aria-hidden="true" data-lenis-prevent className="fixed inset-0 z-40 flex flex-col justify-between overflow-y-auto bg-navy-deep px-5 pb-8 pt-28 text-navy-foreground sm:px-8 lg:hidden">
+        <nav aria-label="Menu">
+          <ul>
             {[...nav, { href: "#contact", label: "Contact" }].map((n) => (
-              <li key={n.href}>
-                <a href={n.href} onClick={() => setOpen(false)} className="group flex items-center justify-between border-b py-4 font-serif text-2xl">
-                  {n.label}<ChevronRight className="h-5 w-5 text-primary transition-transform group-hover:translate-x-1" />
-                </a>
+              <li key={n.href} className="overflow-hidden">
+                <a href={n.href} data-menu-link className="block pb-1 font-serif text-[clamp(2.4rem,11vw,4.5rem)] font-medium leading-[1.08] tracking-[-0.03em]">{n.label}</a>
               </li>
             ))}
           </ul>
         </nav>
-      )}
-    </header>
-  );
-}
-
-function Tile({ s, className = "", big }: { s: (typeof services)[number] | { img: string; w: number; h: number; tag: string; title: string; body?: string }; className?: string; big?: boolean }) {
-  return (
-    <a href="#services" className={`tile group reveal ${className}`}>
-      <img src={s.img} alt="" loading="lazy" width={s.w} height={s.h} className="tile-img" />
-      <div className="tile-shade" aria-hidden />
-      <div className="relative mt-auto p-6 sm:p-7">
-        <p className="text-xs uppercase tracking-[0.14em] text-navy-foreground/85">{s.tag}</p>
-        <h3 className={`mt-3 font-sans font-semibold leading-snug text-navy-foreground ${big ? "text-2xl sm:text-3xl" : "text-xl sm:text-[1.4rem]"}`}>
-          {s.title} <ChevronRight className="inline h-5 w-5 transition-transform group-hover:translate-x-1" />
-        </h3>
-      </div>
-    </a>
-  );
-}
-
-function Hero() {
-  return (
-    <section id="top" className="bg-navy-deep text-navy-foreground">
-      <div className="mx-auto grid max-w-[100rem] gap-4 px-5 pb-20 pt-14 sm:px-10 sm:pt-20 lg:grid-cols-12">
-        <div className="lg:col-span-7 lg:pr-10">
-          <h1 className="intro text-[clamp(2.6rem,5.4vw,5.75rem)] font-semibold leading-[0.98] tracking-[-0.025em]">
-            Strategic leadership
-            <span className="block pl-[0.9em] sm:pl-[1.6em]">to build more value<span className="text-primary">.</span></span>
-          </h1>
-          <div className="intro mt-10 flex items-end justify-between gap-8" style={{ animationDelay: "150ms" }}>
-            <p className="max-w-lg text-lg leading-relaxed text-navy-foreground/80">
-              Fractional CEO &amp; COO leadership for businesses ready to grow, scale and perform. We step inside, take ownership, and get it done.
-            </p>
-            <CircleArrow href={contactHref()} label="Schedule a conversation" tone="blue" />
-          </div>
-
-          <div id="services" className="mt-16 grid items-start gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-4">
-              <Tile s={services[0]!} className="aspect-[4/5]" />
-              <Tile s={services[2]!} className="aspect-[4/3]" />
-            </div>
-            <div className="flex flex-col gap-4 sm:pt-16">
-              <Tile s={services[1]!} className="aspect-[4/3]" />
-              <Tile s={services[3]!} className="aspect-[4/5]" />
-            </div>
+        <div className="mt-10 grid gap-8">
+          <div data-menu-fade><a href={contactHref()} className="pill pill-blue">Schedule a conversation</a></div>
+          {site.offices.length > 0 && (
+            <ul data-menu-fade className="grid gap-4 border-t border-navy-foreground/20 pt-6">
+              {site.offices.map((o, i) => (
+                <li key={o.city} data-clock={i} className="flex items-center gap-3">
+                  <span className="relative h-9 w-9 rounded-full border border-navy-foreground/40" aria-hidden>
+                    <span data-hand="h" className="clock-hand h-2.5" />
+                    <span data-hand="m" className="clock-hand h-3.5" />
+                  </span>
+                  <span className="text-sm">{o.city}, {o.country}<span data-time className="block text-xs tabular-nums text-navy-foreground/60" /></span>
+                  <span data-scramble={o.coords} className="ml-auto text-xs tabular-nums text-navy-foreground/60">{o.coords}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div data-menu-fade className="flex flex-wrap gap-x-6 gap-y-2 border-t border-navy-foreground/20 pt-6 text-sm text-navy-foreground/75">
+            {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+            {site.linkedinUrl && <a href={site.linkedinUrl}>LinkedIn</a>}
+            <a href={site.privacyUrl}>Privacy</a>
+            <a href={site.termsUrl}>Terms</a>
           </div>
         </div>
+      </div>
+    </>
+  );
+}
 
-        <aside className="lg:col-span-5">
-          <div className="lg:sticky lg:top-24">
-            <a href="#approach" className="tile group intro min-h-[34rem] lg:min-h-[calc(100vh-8rem)]" style={{ animationDelay: "250ms" }}>
-              <img src={heroImg} alt="" width={1920} height={1088} className="tile-img object-[75%_center]" />
-              <div className="tile-shade-top" aria-hidden />
-              <div className="relative p-7 sm:p-9">
-                <p className="text-xs uppercase tracking-[0.14em]">Our approach</p>
-                <p className="mt-4 text-[clamp(2rem,3.2vw,3rem)] font-light leading-[1.1]">Hands-on leadership. Measurable impact.</p>
-              </div>
-              <span className="btn-white relative m-7 mt-auto self-start sm:m-9 sm:mt-auto">Read our approach <ArrowRight className="h-4 w-4" /></span>
-            </a>
+function Hero({ onFilm }: { onFilm: () => void }) {
+  return (
+    <section id="top" className="relative h-[100svh] min-h-[38rem] overflow-hidden bg-navy-deep text-navy-foreground">
+      <div data-hero-media className="absolute inset-x-0 -top-[14%] h-[128%]">
+        <img data-hero-still src={heroImg} alt="Mountain ridge in early light" width={1920} height={1088} fetchPriority="high" className="h-full w-full object-cover object-[70%_center]" />
+      </div>
+      <div className="absolute inset-0 bg-hero-overlay opacity-80" aria-hidden />
+      <div className="absolute inset-0 bg-hero-fade" aria-hidden />
+      <div data-hero-content className="relative z-10 mx-auto flex h-full max-w-[96rem] flex-col justify-end px-5 pb-10 sm:px-8 sm:pb-14">
+        <h1 data-hero-title className="max-w-[15ch] text-balance font-serif text-[clamp(3rem,8.4vw,8.5rem)] font-medium leading-[0.95] tracking-[-0.04em]">
+          Strategic leadership to build more value.
+        </h1>
+        <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <p data-hero-rise className="max-w-xl text-lg leading-relaxed text-navy-foreground/85">
+            Fractional CEO &amp; COO leadership for businesses ready to grow, scale and perform. We step inside, take ownership, and get it done.
+          </p>
+          <div data-hero-rise className="flex flex-wrap items-center gap-3">
+            <a href={contactHref()} className="pill pill-white">Schedule a conversation</a>
+            {site.filmUrl && (
+              <button type="button" onClick={onFilm} className="pill pill-glass gap-2"><Play className="h-3.5 w-3.5 fill-current" />Watch the film</button>
+            )}
+            <a href="#questions" className="pill pill-glass">Where we help</a>
           </div>
-        </aside>
+        </div>
       </div>
     </section>
   );
 }
 
-function Questions() {
+function SectionHead({ title, copy, children, className = "" }: { title: string; copy?: string; children?: React.ReactNode; className?: string }) {
   return (
-    <section id="questions" className="bg-card py-24 sm:py-32">
-      <div className="mx-auto grid max-w-[100rem] gap-12 px-5 sm:px-10 lg:grid-cols-12">
-        <div className="lg:col-span-4">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-primary">Where we help</p>
-          <h2 className="reveal mt-5 text-[clamp(2.2rem,4vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.02em]">
-            The questions that keep leaders up at night<span className="text-primary">.</span>
-          </h2>
-          <p className="reveal mt-6 max-w-sm leading-relaxed text-muted-foreground">Most engagements start with one of these. Sound familiar?</p>
-        </div>
-        <ol className="lg:col-span-8">
-          {questions.map(([q, s], i) => (
-            <li key={q} className="reveal">
-              <a href={contactHref()} className="question-row group">
-                <span className="text-sm tabular-nums text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
-                <span className="font-serif text-[clamp(1.4rem,2.6vw,2.25rem)] leading-tight transition-colors group-hover:text-primary">{q}</span>
-                <span className="hidden text-sm text-muted-foreground md:block">{s}</span>
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-all group-hover:rotate-90 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"><Plus className="h-4 w-4" /></span>
+    <div data-section-head className={className}>
+      <h2 data-head-title className="max-w-[16ch] text-balance font-serif text-[clamp(2.4rem,5.6vw,5.2rem)] font-medium leading-[1] tracking-[-0.035em]">{title}</h2>
+      {copy && <p data-head-copy className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">{copy}</p>}
+      {children && <div data-head-action className="mt-8">{children}</div>}
+    </div>
+  );
+}
+
+function Services() {
+  return (
+    <section id="services" className="bg-card">
+      <div className="mx-auto max-w-[76rem] px-5 py-24 sm:px-8 sm:py-32">
+        <SectionHead title="The work we take on." copy="Fractional leadership and hands-on execution, shaped around your business." />
+        <ol className="mt-16 grid gap-5 md:grid-cols-2 md:gap-6">
+          {services.map((s, i) => (
+            <li key={s.tag} className={i % 2 === 1 ? "md:mt-24" : ""}>
+              <a data-card href={contactHref()} className="group relative block aspect-[4/5] overflow-hidden rounded-[10px] bg-navy-deep text-navy-foreground">
+                <img data-pan src={s.img} alt={s.alt} width={s.w} height={s.h} loading="lazy" className="absolute inset-x-0 -top-[10%] h-[120%] w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]" />
+                <span className="absolute inset-0 bg-gradient-to-t from-navy-deep via-navy-deep/45 to-transparent" aria-hidden />
+                <span data-card-body className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 sm:p-8">
+                  <span>
+                    <span className="block text-xs font-medium uppercase tracking-[0.14em] text-navy-foreground/70">{s.tag}</span>
+                    <span className="mt-4 block font-serif text-[clamp(1.6rem,2.4vw,2.2rem)] font-medium leading-[1.1] tracking-[-0.02em]">{s.title}</span>
+                    <span className="mt-3 block max-w-md text-sm leading-relaxed text-navy-foreground/80">{s.body}</span>
+                  </span>
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/40 bg-white/10 backdrop-blur transition-colors group-hover:bg-white group-hover:text-navy-deep" aria-hidden>
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </span>
               </a>
             </li>
           ))}
@@ -195,54 +199,64 @@ function Questions() {
   );
 }
 
-function Approach() {
+function Questions() {
   return (
-    <section id="approach" className="bg-paper">
-      <div className="mx-auto grid max-w-[100rem] lg:grid-cols-2">
-        <img src={archImg} alt="Modern glass office building against a clear sky" loading="lazy" width={1280} height={1024} className="h-full min-h-[22rem] w-full object-cover" />
-        <div className="px-5 py-20 sm:px-10 sm:py-28 lg:px-20">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-primary">The Mahoney approach</p>
-          <h2 className="reveal mt-5 text-[clamp(2.4rem,4.6vw,4.25rem)] font-semibold leading-[1.02] tracking-[-0.02em]">
-            Hands-on leadership.
-            <span className="block pl-[1.2em] font-normal italic">Measurable impact.</span>
-          </h2>
-          <p className="reveal mt-8 max-w-xl text-lg leading-relaxed text-foreground/80">
-            We don't hand over a deck and leave. We sit in the leadership meetings, take on real responsibilities, and stay close enough to the work to see whether it's actually changing.
-          </p>
-          <dl className="mt-12 divide-y border-y border-foreground/20">
-            {[
-              ["Embedded", "Part of your leadership team, inside the business day to day."],
-              ["Practical", "Decisions, owners and dates. Nothing that only works on a slide."],
-              ["Accountable", "Agreed measures of progress, reviewed openly and often."],
-            ].map(([t, b]) => (
-              <div key={t} className="reveal grid gap-2 py-6 sm:grid-cols-[10rem_1fr]">
-                <dt className="font-serif text-2xl">{t}</dt>
-                <dd className="leading-relaxed text-muted-foreground sm:pt-1">{b}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+    <section id="questions" className="bg-background">
+      <div className="mx-auto max-w-[76rem] px-5 py-24 sm:px-8 sm:py-32">
+        <SectionHead title="The questions that keep leaders up at night." copy="Most engagements start with one of these. The last piece is yours." />
+        <QuestionPuzzle questions={questions} href={contactHref()} />
       </div>
     </section>
   );
 }
 
+function Approach() {
+  return (
+    <>
+      <section id="approach" className="belief-section relative min-h-[100svh] overflow-hidden bg-background">
+        <div data-belief-media className="belief-media absolute inset-0 bg-navy-deep">
+          <img src={archImg} alt="Modern glass office building against a clear sky" width={1280} height={1024} loading="lazy" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-navy-deep/70" aria-hidden />
+        </div>
+        <div data-belief-content className="relative z-10 mx-auto grid min-h-[100svh] max-w-[96rem] content-center gap-10 px-8 py-24 text-navy-foreground sm:px-14 lg:grid-cols-12 lg:items-center">
+          <div className="lg:col-span-5">
+            <h2 className="text-balance font-serif text-[clamp(2.2rem,4.4vw,4.2rem)] font-medium leading-[1.02] tracking-[-0.035em]">Hands-on leadership. Measurable impact.</h2>
+            <a href="#how-we-work" className="pill pill-glass mt-8 hidden lg:inline-flex">See how we work</a>
+          </div>
+          <div data-belief-list className="lg:col-span-7">
+            <ul data-belief-track className="grid gap-6">
+              {beliefs.map((b) => (
+                <li key={b} className="font-serif text-[clamp(1.6rem,3.4vw,3rem)] font-medium leading-[1.12] tracking-[-0.025em]">{b}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section className="bg-background">
+        <dl data-approach-details className="mx-auto grid max-w-[76rem] gap-0 border-t border-border px-5 sm:px-8 md:grid-cols-3">
+          {principles.map(([t, b]) => (
+            <div key={t} data-aitem className="border-b border-border py-10 md:border-b-0 md:border-l md:px-8 md:first:border-l-0 md:first:pl-0">
+              <dt className="font-serif text-3xl font-medium tracking-[-0.02em]">{t}</dt>
+              <dd className="mt-3 max-w-xs leading-relaxed text-muted-foreground">{b}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    </>
+  );
+}
+
 function HowWeWork() {
   return (
-    <section id="how-we-work" className="bg-navy-deep py-24 text-navy-foreground sm:py-32">
-      <div className="mx-auto max-w-[100rem] px-5 sm:px-10">
-        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <h2 className="reveal text-[clamp(2.4rem,5vw,4.5rem)] font-semibold leading-[1] tracking-[-0.02em]">
-            How we work<span className="text-primary">.</span>
-          </h2>
-          <p className="reveal max-w-md text-lg text-navy-foreground/70">Three stages, no mystery. Every engagement is shaped around your business — the rhythm stays the same.</p>
-        </div>
-        <ol className="mt-16 grid border-t border-navy-foreground/20 md:grid-cols-3">
-          {steps.map((s, i) => (
-            <li key={s.n} className="reveal step-col" style={{ transitionDelay: `${i * 120}ms` }}>
-              <span className="step-num">{s.n}</span>
-              <h3 className="mt-8 text-3xl font-semibold">{s.title}</h3>
-              <p className="mt-4 max-w-sm leading-relaxed text-navy-foreground/70">{s.body}</p>
+    <section id="how-we-work" className="bg-card">
+      <div className="mx-auto max-w-[76rem] px-5 py-24 sm:px-8 sm:py-32">
+        <SectionHead title="Three stages, no mystery." copy="Every engagement is shaped around your business — the rhythm stays the same." />
+        <ol className="mt-16 grid gap-10 md:grid-cols-3 md:gap-8">
+          {steps.map((s) => (
+            <li key={s.n} data-step className="border-t border-navy/20 pt-6">
+              <span data-count={s.n} className="block font-serif text-[clamp(4.5rem,9vw,8rem)] font-medium leading-[0.85] tracking-[-0.05em] tabular-nums text-primary">0{s.n}</span>
+              <h3 data-step-rest className="mt-8 font-serif text-3xl font-medium tracking-[-0.02em]">{s.title}</h3>
+              <p data-step-rest className="mt-4 max-w-sm leading-relaxed text-muted-foreground">{s.body}</p>
             </li>
           ))}
         </ol>
@@ -254,21 +268,17 @@ function HowWeWork() {
 function Contact() {
   const ready = Boolean(site.bookingUrl || site.email);
   return (
-    <section id="contact" className="relative overflow-hidden bg-primary text-primary-foreground">
-      <Monogram tone="dark" className="pointer-events-none absolute -bottom-[12%] -right-[6%] w-[48rem] max-w-[90vw] opacity-[0.12] mix-blend-luminosity" />
-      <div className="relative mx-auto max-w-[100rem] px-5 py-24 sm:px-10 sm:py-36">
-        <h2 className="reveal text-[clamp(3rem,9vw,9rem)] font-semibold leading-[0.95] tracking-[-0.03em]">
-          Let's build
-          <span className="block pl-[0.8em] italic font-normal">what's next.</span>
-        </h2>
-        <div className="mt-14 flex flex-col gap-10 border-t border-primary-foreground/30 pt-10 md:flex-row md:items-center md:justify-between">
-          <p className="max-w-lg text-lg leading-relaxed text-primary-foreground/90">
-            Fractional CEO or COO, sorting out operations, or a partner for the next stage of growth — it starts with a straightforward conversation.
-          </p>
+    <section id="contact" className="bg-background">
+      <div className="mx-auto max-w-[76rem] px-5 py-28 sm:px-8 sm:py-40">
+        <h2 data-c-title className="max-w-[12ch] text-balance font-serif text-[clamp(3rem,8vw,7.5rem)] font-medium leading-[0.96] tracking-[-0.04em]">Let's build what's next.</h2>
+        <p data-c-copy className="mt-8 max-w-lg text-lg leading-relaxed text-navy/80">
+          Fractional CEO or COO, sorting out operations, or a partner for the next stage of growth — it starts with a straightforward conversation.
+        </p>
+        <div data-c-action className="mt-8">
           {ready ? (
-            <a href={contactHref()} className="btn-white">Schedule a conversation <ArrowRight className="h-4 w-4" /></a>
+            <a href={contactHref()} className="pill pill-blue">Schedule a conversation</a>
           ) : (
-            <p className="text-sm text-primary-foreground/85">Online booking opens soon.</p>
+            <p className="text-sm text-muted-foreground">Online booking opens soon.</p>
           )}
         </div>
       </div>
@@ -278,43 +288,50 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="bg-navy-deep text-navy-foreground">
-      <div className="mx-auto grid max-w-[100rem] gap-10 px-5 py-16 sm:px-10 md:grid-cols-12">
-        <div className="md:col-span-5">
-          <Logo />
-          <p className="mt-5 max-w-xs text-sm leading-relaxed text-navy-foreground/55">Strategy consulting and fractional CEO &amp; COO advisory.</p>
+    <footer id="footer" className="overflow-hidden bg-navy-deep text-navy-foreground">
+      <div data-footer-inner className="mx-auto max-w-[96rem] px-5 pb-8 pt-24 sm:px-8 sm:pt-32">
+        <p data-footer-tag className="max-w-[14ch] text-balance font-serif text-[clamp(2.8rem,9vw,9rem)] font-medium leading-[0.95] tracking-[-0.04em]">Clarity to lead. Capability to deliver.</p>
+        <div className="mt-20 grid gap-10 border-t border-navy-foreground/15 pt-10 md:grid-cols-12">
+          <div data-footer-col className="md:col-span-5">
+            <Logo />
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-navy-foreground/70">Strategy consulting and fractional CEO &amp; COO advisory.</p>
+          </div>
+          <nav data-footer-col aria-label="Footer" className="grid grid-cols-2 content-start gap-3 text-sm text-navy-foreground/80 md:col-span-4">
+            {[...nav, { href: "#contact", label: "Contact" }].map((n) => <a key={n.href} href={n.href} className="hover:text-navy-foreground">{n.label}</a>)}
+          </nav>
+          <div data-footer-col className="flex flex-col gap-3 text-sm text-navy-foreground/80 md:col-span-3 md:items-end">
+            {site.email && <a href={`mailto:${site.email}`} className="hover:text-navy-foreground">{site.email}</a>}
+            {site.linkedinUrl && <a href={site.linkedinUrl} className="hover:text-navy-foreground">LinkedIn</a>}
+            <a href={site.privacyUrl} className="hover:text-navy-foreground">Privacy</a>
+            <a href={site.termsUrl} className="hover:text-navy-foreground">Terms</a>
+            <Link to="/brand" className="hover:text-navy-foreground">Brand</Link>
+          </div>
         </div>
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-3 text-sm text-navy-foreground/70 md:col-span-4">
-          {[...nav, { href: "#contact", label: "Contact" }].map((n) => <a key={n.href} href={n.href} className="hover:text-navy-foreground">{n.label}</a>)}
-        </nav>
-        <div className="flex flex-col gap-3 text-sm text-navy-foreground/70 md:col-span-3 md:items-end">
-          {site.linkedinUrl && <a href={site.linkedinUrl} className="hover:text-navy-foreground">LinkedIn</a>}
-          <a href={site.privacyUrl} className="hover:text-navy-foreground">Privacy</a>
-          <a href={site.termsUrl} className="hover:text-navy-foreground">Terms</a>
-          <Link to="/brand" className="hover:text-navy-foreground">Brand</Link>
-        </div>
-      </div>
-      <div className="mx-auto max-w-[100rem] border-t border-navy-foreground/10 px-5 py-6 text-xs text-navy-foreground/45 sm:px-10">
-        © {new Date().getFullYear()} Mahoney Consulting · Mahoney.consulting
+        <p className="mt-12 text-xs text-navy-foreground/65">© {new Date().getFullYear()} Mahoney Consulting · Mahoney.consulting</p>
       </div>
     </footer>
   );
 }
 
 function Index() {
-  useReveal();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [film, setFilm] = useState(false);
+  const closeFilm = useCallback(() => setFilm(false), []);
+  useHomeMotion(rootRef);
   return (
-    <>
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
+    <div ref={rootRef}>
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:bg-primary focus:px-4 focus:py-2 focus:text-navy-deep">Skip to content</a>
       <Header />
       <main id="main">
-        <Hero />
+        <Hero onFilm={() => setFilm(true)} />
+        <Services />
         <Questions />
         <Approach />
         <HowWeWork />
         <Contact />
       </main>
       <Footer />
-    </>
+      {site.filmUrl && <FilmOverlay src={site.filmUrl} open={film} onClose={closeFilm} />}
+    </div>
   );
 }
