@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 180" role="img" aria-label="Mahoney Consulting logo">
+ <g transform="translate(16 22) scale(1.23)"><defs><linearGradient id="connectedM" gradientUnits="userSpaceOnUse" x1="9" y1="0" x2="143" y2="0"><stop offset="0" stop-color="#0A1F44"/><stop offset=".49" stop-color="#0A1F44"/><stop offset=".54" stop-color="#208BFF"/><stop offset="1" stop-color="#87D8FF"/></linearGradient></defs><path fill="url(#connectedM)" d="M9 13 H39 L78 64 L102 22 Q110 13 123 13 H142 V19 H130 V98 H143 V104 H96 V98 H108 V31 L78 83 L38 31 V98 H51 V104 H9 V98 H23 V19 H9 Z"/></g>
+ <path d="M230 37 V145" stroke="#0A1F44" stroke-opacity=".35" stroke-width="1"/>
+ <text x="260" y="95" fill="#0A1F44" font-family="Georgia, 'Times New Roman', serif" font-weight="600" font-size="72">Mahoney</text>
+ <text x="265" y="133" fill="#0A1F44" font-family="Arial, sans-serif" font-size="19" letter-spacing="11">CONSULTING</text></svg>
