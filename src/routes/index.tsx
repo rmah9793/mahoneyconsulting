@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useRef, useState } from "react";
 import { ArrowUpRight, Play } from "lucide-react";
-import heroImg from "@/assets/hero-mountains.jpg";
-import archImg from "@/assets/approach-architecture.jpg";
-import chessImg from "@/assets/tile-chess.jpg";
+import heroImg from "@/assets/hero-working-room.jpg";
+import workshopImg from "@/assets/approach-workshop.jpg";
+import directionImg from "@/assets/tile-direction.jpg";
 import opsImg from "@/assets/tile-operations.jpg";
-import boardImg from "@/assets/tile-boardroom.jpg";
+import sessionImg from "@/assets/tile-session.jpg";
 import { Logo } from "@/components/Logo";
 import { FilmOverlay } from "@/components/FilmOverlay";
 import { QuestionPuzzle } from "@/components/QuestionPuzzle";
@@ -34,10 +34,10 @@ const nav = [
 ];
 
 const services = [
-  { img: chessImg, w: 1024, h: 1024, alt: "Chess pieces on a board", tag: "Fractional CEO", title: "Direction, decisions and a team pulling the same way", body: "Senior leadership to set strategy and lead the business into its next stage — without a full-time executive hire." },
-  { img: opsImg, w: 1280, h: 1024, alt: "An operations floor in use", tag: "Fractional COO", title: "Operations that keep up with the ambition", body: "Process, structure and cadence for businesses that have outgrown how they run." },
-  { img: boardImg, w: 1024, h: 1280, alt: "A leadership meeting in a boardroom", tag: "Strategy & Execution", title: "A plan you can actually run on Monday", body: "Fewer priorities, clear owners, a weekly rhythm — and someone accountable for keeping it moving." },
-  { img: archImg, w: 1280, h: 1024, alt: "A modern glass office building", tag: "Growth & Value", title: "Building a business that's worth more", body: "Focus on the levers that matter for revenue, margin and long-term enterprise value." },
+  { img: directionImg, w: 864, h: 1152, alt: "Someone at a work table, seen from behind", tag: "Fractional CEO", title: "Direction, decisions and a team pulling the same way", body: "Senior leadership to set strategy and lead the business into its next stage — without a full-time executive hire." },
+  { img: opsImg, w: 864, h: 1152, alt: "A machinist at a bench in a small workshop", tag: "Fractional COO", title: "Operations that keep up with the ambition", body: "Process, structure and cadence for businesses that have outgrown how they run." },
+  { img: sessionImg, w: 864, h: 1152, alt: "Two people working at a table in a plain meeting room", tag: "Strategy & Execution", title: "A plan you can actually run on Monday", body: "Fewer priorities, clear owners, a weekly rhythm — and someone accountable for keeping it moving." },
+  { img: workshopImg, w: 1280, h: 720, alt: "A brick workshop at dusk, roller door open", tag: "Growth & Value", title: "Building a business that's worth more", body: "Focus on the levers that matter for revenue, margin and long-term enterprise value." },
 ];
 
 const questions = [
@@ -134,7 +134,7 @@ function Hero({ onFilm }: { onFilm: () => void }) {
   return (
     <section id="top" className="relative h-[100svh] min-h-[38rem] overflow-hidden bg-navy-deep text-navy-foreground">
       <div data-hero-media className="absolute inset-x-0 -top-[14%] h-[128%]">
-        <img data-hero-still src={heroImg} alt="Mountain ridge in early light" width={1920} height={1088} fetchPriority="high" className="h-full w-full object-cover object-[70%_center]" />
+        <img data-hero-still src={heroImg} alt="A meeting room with someone standing at the window" width={1280} height={720} fetchPriority="high" className="h-full w-full object-cover object-[70%_center]" />
       </div>
       <div className="absolute inset-0 bg-hero-overlay opacity-80" aria-hidden />
       <div className="absolute inset-0 bg-hero-fade" aria-hidden />
@@ -215,7 +215,7 @@ function Approach() {
     <>
       <section id="approach" className="belief-section relative min-h-[100svh] overflow-hidden bg-background">
         <div data-belief-media className="belief-media absolute inset-0 bg-navy-deep">
-          <img src={archImg} alt="Modern glass office building against a clear sky" width={1280} height={1024} loading="lazy" className="h-full w-full object-cover" />
+          <img src={workshopImg} alt="A brick workshop at dusk, roller door open" width={1280} height={720} loading="lazy" className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-navy-deep/70" aria-hidden />
         </div>
         <div data-belief-content className="relative z-10 mx-auto grid min-h-[100svh] max-w-[96rem] content-center gap-10 px-8 py-24 text-navy-foreground sm:px-14 lg:grid-cols-12 lg:items-center">
