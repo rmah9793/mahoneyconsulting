@@ -34,9 +34,9 @@ const nav = [
 ];
 
 const services = [
-  { img: directionImg, w: 864, h: 1152, alt: "Someone at a work table, seen from behind", tag: "Fractional CEO", title: "Direction, decisions and a team pulling the same way", body: "Senior leadership to set strategy and lead the business into its next stage — without a full-time executive hire." },
+  { img: directionImg, w: 864, h: 1152, alt: "Two people's hands over a blank sheet of paper on a table", tag: "Fractional CEO", title: "Direction, decisions and a team pulling the same way", body: "Senior leadership to set strategy and lead the business into its next stage — without a full-time executive hire." },
   { img: opsImg, w: 864, h: 1152, alt: "A machinist at a bench in a small workshop", tag: "Fractional COO", title: "Operations that keep up with the ambition", body: "Process, structure and cadence for businesses that have outgrown how they run." },
-  { img: sessionImg, w: 864, h: 1152, alt: "Two people working at a table in a plain meeting room", tag: "Strategy & Execution", title: "A plan you can actually run on Monday", body: "Fewer priorities, clear owners, a weekly rhythm — and someone accountable for keeping it moving." },
+  { img: sessionImg, w: 864, h: 1152, alt: "A small meeting room after a session, with notebooks and a coat on a chair", tag: "Strategy & Execution", title: "A plan you can actually run on Monday", body: "Fewer priorities, clear owners, a weekly rhythm — and someone accountable for keeping it moving." },
   { img: workshopImg, w: 1280, h: 720, alt: "A brick workshop at dusk, roller door open", tag: "Growth & Value", title: "Building a business that's worth more", body: "Focus on the levers that matter for revenue, margin and long-term enterprise value." },
 ];
 
@@ -134,7 +134,7 @@ function Hero({ onFilm }: { onFilm: () => void }) {
   return (
     <section id="top" className="relative h-[100svh] min-h-[38rem] overflow-hidden bg-navy-deep text-navy-foreground">
       <div data-hero-media className="absolute inset-x-0 -top-[14%] h-[128%]">
-        <img data-hero-still src={heroImg} alt="A meeting room with someone standing at the window" width={1280} height={720} fetchPriority="high" className="h-full w-full object-cover object-[70%_center]" />
+        <img data-hero-still src={heroImg} alt="An empty meeting room with papers left on a long oak table" width={1280} height={720} fetchPriority="high" className="h-full w-full object-cover object-[70%_center]" />
       </div>
       <div className="absolute inset-0 bg-hero-overlay opacity-80" aria-hidden />
       <div className="absolute inset-0 bg-hero-fade" aria-hidden />
